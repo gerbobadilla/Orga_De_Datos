@@ -60,6 +60,7 @@ def reducir_train():
 	train[['expenses']] = train[['expenses']].fillna(value=0)
 	train[['floor']] = train[['floor']].fillna(value=0)
 	train[['price_aprox_usd']] = train[['price_aprox_usd']].fillna(value=0)
+	train=train.ix[train['price_aprox_usd'] > 0]
 
 	return train
 
