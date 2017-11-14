@@ -23,11 +23,15 @@ def reducir_train():
 	data_14_02 = pd.read_csv('../data/properati/properati-AR-2014-02-01-properties-sell.csv')
 	data_13_08 = pd.read_csv('../data/properati/properati-AR-2013-08-01-properties-sell.csv')
 
-	data_frames = [data_17_08, data_17_02, data_16_08, data_16_02,data_15_08,data_15_02,data_14_08,data_14_02,data_13_08]
-	train = pd.concat(data_frames)
+	data_frames16_17 = [data_17_08, data_17_02, data_16_08, data_16_02]
+	train16_17 = pd.concat(data_frames16_17)
 
 	#Nos quedamos con las zonas de Capital Federal y GBA
-	train = train.loc[(train.state_name=='Capital Federal') | (train.state_name.str.contains('G.B.A'))]
+	train16_17 = train16_17.loc[(train16_17.state_name=='Capital Federal') | (train16_17.state_name.str.contains('G.B.A'))]
+
+	data_frames = [train16_17,data_15_08,data_15_02,data_14_08,data_14_02,data_13_08]
+	train = pd.concat(data_frames)
+	
 
 	train['created_on'] = pd.to_datetime(train['created_on'])
 	train = train.drop('image_thumbnail', axis=1)
@@ -60,7 +64,9 @@ def reducir_train():
 	train[['expenses']] = train[['expenses']].fillna(value=0)
 	train[['floor']] = train[['floor']].fillna(value=0)
 	train[['price_aprox_usd']] = train[['price_aprox_usd']].fillna(value=0)
-	train=train.ix[train['price_aprox_usd'] > 0]
+	train=train.loc[train['price_aprox_usd'] > 0]
+	train=train.loc[(train['expenses'] > 0) | (train['floor'] > 0) | (train['price_usd_per_m2'] > 0) | (train['rooms'] > 0) \
+                | (train['surface_covered_in_m2'] > 0) | (train['surface_total_in_m2'] > 0)]
 
 	return train
 
